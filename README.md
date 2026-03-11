@@ -1,6 +1,6 @@
 # skills
 
-A collection of reusable AI agent skills for B12 Consulting projects. Skills follow the [skills.sh](https://skills.sh/) open format and can be installed into any compatible AI coding agent (Claude, Cursor, Copilot, etc.).
+A collection of reusable AI agent skills for Yuma projects. Skills follow the [skills.sh](https://skills.sh/) open format and can be installed into any compatible AI coding agent (Claude, Cursor, Copilot, etc.).
 
 ## Installation
 
