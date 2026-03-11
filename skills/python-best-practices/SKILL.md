@@ -153,3 +153,45 @@ print(f"Processing {len(records)} records from {source}")
 - Use environment variables or a secrets manager for sensitive configuration
 - Validate and sanitize all external inputs
 - Use `bandit` for static security analysis
+
+## Scripts
+
+Ready-to-use helper scripts are in the `scripts/` directory:
+
+| Script | Purpose |
+|--------|---------|
+| `scripts/lint.sh [path]` | Run Black, Ruff, mypy, and Bandit checks on the project |
+| `scripts/setup-project.sh <name>` | Scaffold a new Python project with the recommended `src/` layout |
+
+**Lint a project:**
+
+```bash
+bash scripts/lint.sh ./src
+```
+
+**Create a new project:**
+
+```bash
+bash scripts/setup-project.sh my-new-service
+cd my-new-service
+uv venv && uv pip install -e ".[dev]"
+```
+
+## References
+
+Supporting files in the `references/` directory:
+
+| File | Purpose |
+|------|---------|
+| `references/pyproject-template.toml` | Starter `pyproject.toml` with Black, Ruff, mypy, Bandit, and pytest configured |
+| `references/logging-config.py` | Reference logging setup — stdlib JSON formatter and structlog patterns |
+
+**Bootstrap `pyproject.toml` from the template:**
+
+```bash
+cp references/pyproject-template.toml ./pyproject.toml
+# Replace placeholder values:
+sed -i 's/YOUR-PROJECT-NAME/my-service/g; s/your_package_name/my_service/g' pyproject.toml
+```
+
+**Use the logging reference** — copy the relevant `setup_*` function into your application entry point.
