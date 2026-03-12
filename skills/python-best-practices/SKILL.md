@@ -97,7 +97,6 @@ my-project/
 ## Dependencies
 
 - Pin dependencies with exact versions in `requirements.txt` or lock files
-- Use virtual environments (`venv`, `conda`, or `uv`)
 - Separate dev dependencies from production dependencies in `pyproject.toml`
 - Prefer [uv](https://docs.astral.sh/uv/) for fast dependency management
 - Always use `uv add ...` to add packages, which ensures that pyproject.toml and uv.lock remain the source of truth.
