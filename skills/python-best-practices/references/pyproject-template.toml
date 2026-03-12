@@ -21,9 +21,8 @@ dependencies = []
 
 [project.optional-dependencies]
 dev = [
-  "black>=24.0",
   "ruff>=0.4",
-  "mypy>=1.10",
+  "ty>=0.0.21",
   "bandit[toml]>=1.7",
   "pytest>=8.0",
   "pytest-mock>=3.14",
@@ -31,14 +30,7 @@ dev = [
 ]
 
 # ---------------------------------------------------------------------------
-# Black — formatter
-# ---------------------------------------------------------------------------
-[tool.black]
-line-length = 88
-target-version = ["py311"]
-
-# ---------------------------------------------------------------------------
-# Ruff — linter
+# Ruff — formatter and linter
 # ---------------------------------------------------------------------------
 [tool.ruff]
 line-length = 88
@@ -62,14 +54,6 @@ ignore = [
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**/*.py" = ["S101", "ANN"]   # allow assert and unannotated test helpers
-
-# ---------------------------------------------------------------------------
-# mypy — static type checker
-# ---------------------------------------------------------------------------
-[tool.mypy]
-python_version = "3.11"
-strict = true
-ignore_missing_imports = true
 
 # ---------------------------------------------------------------------------
 # pytest
