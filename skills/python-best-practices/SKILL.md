@@ -23,7 +23,6 @@ Reference these guidelines when:
 ## Code Style and Readability
 
 - Follow [PEP 8](https://peps.python.org/pep-0008/) for code formatting
-- Use [Black](https://black.readthedocs.io/) for automatic formatting
 - Use [Ruff](https://docs.astral.sh/ruff/) for formatting and linting
 - Limit line length to 88 characters (Black default)
 - Use descriptive variable and function names
