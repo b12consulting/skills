@@ -26,6 +26,7 @@ Reference these guidelines when:
 - Use [Ruff](https://docs.astral.sh/ruff/) for formatting and linting
 - Limit line length to 88 characters (Black default)
 - Use descriptive variable and function names
+- Every method must have type hints following [PEP 484](https://peps.python.org/pep-0484/).
 - Write docstrings for all public functions, classes, and modules (Google or NumPy style)
 
 ## Type Hints
