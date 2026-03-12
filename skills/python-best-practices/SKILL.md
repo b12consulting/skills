@@ -32,10 +32,11 @@ Reference these guidelines when:
 ## Type Hints
 
 - Use type hints for all function signatures
-- Use `from __future__ import annotations` for forward references
-- Use `Optional[T]` or `T | None` for nullable values
-- Use `TypedDict` for structured dictionaries
-- Run `mypy` or `pyright` for static type checking
+- Use `T | None` for nullable values (do not use `Optional`).
+- Use `dict[str, str]` over `Dict`, same for `set`, `list`, etc.
+- Use `dataclass` to structure data.
+- Use `TypedDict` to provide type hints for dictionaries.
+- Run Astral's `ty` for static type checking
 
 ```python
 # Good
