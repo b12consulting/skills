@@ -24,7 +24,7 @@ Reference these guidelines when:
 
 - Follow [PEP 8](https://peps.python.org/pep-0008/) for code formatting
 - Use [Ruff](https://docs.astral.sh/ruff/) for formatting and linting
-- Limit line length to 88 characters (Black default)
+- Limit line length to 88 characters
 - Use descriptive variable and function names
 - Every method must have type hints following [PEP 484](https://peps.python.org/pep-0484/).
 - Write docstrings for all public functions, classes, and modules (Google or NumPy style)
@@ -164,8 +164,8 @@ Ready-to-use helper scripts are in the `scripts/` directory:
 
 | Script | Purpose |
 |--------|---------|
-| `scripts/lint.sh [path]` | Run Black, Ruff, mypy, and Bandit checks on the project |
-| `scripts/setup-project.sh <name>` | Scaffold a new Python project with the recommended `src/` layout |
+| `scripts/lint.sh [path]` | Run Ruff format, Ruff lint, ty, and Bandit checks on the project |
+| `scripts/setup-project.sh <name>` | Scaffold a new Python project using `uv init --lib` |
 
 **Lint a project:**
 
@@ -178,7 +178,7 @@ bash scripts/lint.sh ./src
 ```bash
 bash scripts/setup-project.sh my-new-service
 cd my-new-service
-uv venv && uv pip install -e ".[dev]"
+uv sync
 ```
 
 ## References
@@ -187,15 +187,9 @@ Supporting files in the `references/` directory:
 
 | File | Purpose |
 |------|---------|
-| `references/pyproject-template.toml` | Starter `pyproject.toml` with Black, Ruff, mypy, Bandit, and pytest configured |
+| `references/pyproject-template.toml` | Starter `pyproject.toml` with Ruff, Bandit, and pytest configured |
 | `references/logging-config.py` | Reference logging setup — stdlib JSON formatter and structlog patterns |
 
-**Bootstrap `pyproject.toml` from the template:**
-
-```bash
-cp references/pyproject-template.toml ./pyproject.toml
-# Replace placeholder values:
-sed -i 's/YOUR-PROJECT-NAME/my-service/g; s/your_package_name/my_service/g' pyproject.toml
-```
+**Add tool configuration from the template** — copy the relevant `[tool.*]` sections into your project's `pyproject.toml`.
 
 **Use the logging reference** — copy the relevant `setup_*` function into your application entry point.
