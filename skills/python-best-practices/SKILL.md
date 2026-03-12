@@ -23,19 +23,20 @@ Reference these guidelines when:
 ## Code Style and Readability
 
 - Follow [PEP 8](https://peps.python.org/pep-0008/) for code formatting
-- Use [Black](https://black.readthedocs.io/) for automatic formatting
-- Use [Ruff](https://docs.astral.sh/ruff/) for linting
+- Use [Ruff](https://docs.astral.sh/ruff/) for formatting and linting
 - Limit line length to 88 characters (Black default)
 - Use descriptive variable and function names
+- Every method must have type hints following [PEP 484](https://peps.python.org/pep-0484/).
 - Write docstrings for all public functions, classes, and modules (Google or NumPy style)
 
 ## Type Hints
 
 - Use type hints for all function signatures
-- Use `from __future__ import annotations` for forward references
-- Use `Optional[T]` or `T | None` for nullable values
-- Use `TypedDict` for structured dictionaries
-- Run `mypy` or `pyright` for static type checking
+- Use `T | None` for nullable values (do not use `Optional`).
+- Use `dict[str, str]` over `Dict`, same for `set`, `list`, etc.
+- Use `dataclass` to structure data.
+- Use `TypedDict` to provide type hints for dictionaries.
+- Run Astral's `ty` for static type checking
 
 ```python
 # Good
@@ -97,16 +98,18 @@ my-project/
 ## Dependencies
 
 - Pin dependencies with exact versions in `requirements.txt` or lock files
-- Use virtual environments (`venv`, `conda`, or `uv`)
 - Separate dev dependencies from production dependencies in `pyproject.toml`
 - Prefer [uv](https://docs.astral.sh/uv/) for fast dependency management
+- Always use `uv add ...` to add packages, which ensures that pyproject.toml and uv.lock remain the source of truth.
+- Use virtual environments through `uv`, i.e. `uv venv`, `uv sync`, `uv run ...`.
+- Use `uv add --dev ...` to add dev dependencies.
 
 ## Data Handling
 
-- Use `pandas` or `polars` for tabular data; prefer `polars` for performance
+- Use `polars` for tabular data together with `patito` if schema definition and validation is needed.
 - Load only necessary columns when reading large files
 - Use chunking or streaming for files that don't fit in memory
-- Validate data schemas at ingestion boundaries (e.g., with `pydantic`)
+- Validate data schemas at ingestion boundaries (e.g., with `patito/pydantic`)
 
 ```python
 # Good — validate early
@@ -127,6 +130,7 @@ records = [Record(**row) for row in raw_data]
 - Use `pytest-mock` or `unittest.mock` for mocking external dependencies
 - Use fixtures for reusable test setup
 - Test edge cases and error paths, not just the happy path
+- If appropriate, consider using `dirty-equals`, `hypothesis`, `inline-snapshot` to write cleaner tests.
 
 ## Logging
 
@@ -150,7 +154,7 @@ print(f"Processing {len(records)} records from {source}")
 ## Security
 
 - Never hardcode secrets or credentials in source code
-- Use environment variables or a secrets manager for sensitive configuration
+- Use environment variables or a secrets manager for sensitive configuration. Use `uv run --env-file=.env ...` to activate the environment variables.
 - Validate and sanitize all external inputs
 - Use `bandit` for static security analysis
 
