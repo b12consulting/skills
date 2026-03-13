@@ -48,6 +48,8 @@ Web application pentesting playbook for URL-driven assessments. Covers crawling,
 - Checking authentication and session handling weaknesses
 - Probing for common injection and IDOR-style authorization flaws
 
+Includes reusable helper scripts under `skills/pentesting-web-apps/scripts/` for composing crawl, auth, injection, and logic-testing workflows around the target URL.
+
 ## Skill Structure
 
 Each skill is a folder under `skills/` containing:
