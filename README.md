@@ -24,15 +24,7 @@ npx skills add b12consulting/skills --list
 
 ## Available Skills
 
-### python-best-practices
-
-Python coding best practices for data and consulting projects. Covers code style, type hints, error handling, project structure, data handling, testing, logging, and security.
-
-**Use when:**
-- Writing new Python scripts or modules
-- Reviewing or refactoring existing Python code
-- Building data pipelines or ETL workflows
-- Developing APIs or CLI tools
+See the `skills/` directory for a full list of available skills, each with its own `SKILL.md` documentation.
 
 ## Skill Structure
 
