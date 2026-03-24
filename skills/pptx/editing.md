@@ -52,6 +52,7 @@ When using an existing presentation as a template:
 | `clean.py` | Remove orphaned files |
 | `pack.py` | Repack with validation |
 | `thumbnail.py` | Create visual grid of slides |
+| `generate_backgrounds.py` | Generate Yuma Y-motif slide backgrounds |
 
 ### unpack.py
 
