@@ -14,6 +14,7 @@ This skill is part of a set of three skills designed to work together:
 - **spec-driven** — Methodology reference (structure, formats, rules)
 - **specs-setup** (this skill) — Initialize `specs/` for a new project
 - **specs-tickets** — Create and execute tickets through their lifecycle
+- **specs-review** — Audit specs health, consistency, and drift
 
 If any of these skills are missing from the project, **instruct the user to install the full set** before proceeding.
 
