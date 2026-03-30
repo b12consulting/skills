@@ -16,7 +16,11 @@ This skill is part of a set of three skills designed to work together:
 - **specs-tickets** (this skill) — Create and execute tickets through their lifecycle
 - **specs-review** — Audit specs health, consistency, and drift
 
-If any of these skills are missing from the project, **instruct the user to install the full set** before proceeding.
+If any of these skills are missing from the project, **instruct the user to install them** before proceeding:
+
+```bash
+npx skills add b12consulting/skills --skill <missing_skill>
+```
 
 **Always load the [spec-driven](../spec-driven/SKILL.md) skill first** for the full methodology reference. Load [templates](../spec-driven/references/templates.md) when creating documents.
 
@@ -59,7 +63,7 @@ Use this frontmatter:
 id: "<NNN>"
 title: "<Descriptive title>"
 status: research
-jira: "<JIRA-KEY>"     # Omit if not provided
+jira: "<JIRA-KEY>" # Omit if not provided
 owner: ""
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
@@ -99,6 +103,7 @@ Compare the ticket's documents against the current state of:
 - **The codebase** — Has relevant code changed since the ticket was last worked on?
 
 If drift is detected:
+
 - Report the specific inconsistencies to the user
 - Discuss whether the ticket needs updating before continuing
 - If specs changed, the ticket may need its Spec.md or Plan.md updated
@@ -107,12 +112,14 @@ If drift is detected:
 ### 4. Resolve Blockers
 
 If the ticket status is `open-questions`:
+
 - Present the unresolved questions from `Decisions.md` to the user
 - Ask for decisions on each
 - Record decisions in the Resolved section of Decisions.md
 - Update ticket status once all questions are answered
 
 If the ticket has `Dependencies.md` with unresolved blockers:
+
 - Report the blocking tickets and their current status
 - Discuss whether to wait, work around, or re-scope
 
@@ -120,15 +127,15 @@ If the ticket has `Dependencies.md` with unresolved blockers:
 
 Based on the current status, pick up at the appropriate phase:
 
-| Current Status | Next Action |
-|---------------|-------------|
-| `research` | Review Research.md findings. Proceed to [Phase 2: Specify](#phase-2-specify). |
-| `specifying` | Check if Spec.md has been validated. If yes, proceed to [Phase 3: Plan](#phase-3-plan). If no, present for validation. |
-| `open-questions` | Resolve questions (step 4), then return to previous phase. |
-| `planned` | Check if Tasks.md exists. If yes, present for validation. If no, proceed to [Phase 4: Define Tasks](#phase-4-define-tasks). |
-| `in-progress` | Check Tasks.md for uncompleted tasks. Continue from [Phase 5: Implement](#phase-5-implement). |
-| `done` | Inform the user the ticket is complete. Ask if they want to reopen or create a follow-up. |
-| `archived` | Inform the user the ticket was archived. Ask if they want to create a new ticket instead. |
+| Current Status   | Next Action                                                                                                                 |
+| ---------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| `research`       | Review Research.md findings. Proceed to [Phase 2: Specify](#phase-2-specify).                                               |
+| `specifying`     | Check if Spec.md has been validated. If yes, proceed to [Phase 3: Plan](#phase-3-plan). If no, present for validation.      |
+| `open-questions` | Resolve questions (step 4), then return to previous phase.                                                                  |
+| `planned`        | Check if Tasks.md exists. If yes, present for validation. If no, proceed to [Phase 4: Define Tasks](#phase-4-define-tasks). |
+| `in-progress`    | Check Tasks.md for uncompleted tasks. Continue from [Phase 5: Implement](#phase-5-implement).                               |
+| `done`           | Inform the user the ticket is complete. Ask if they want to reopen or create a follow-up.                                   |
+| `archived`       | Inform the user the ticket was archived. Ask if they want to create a new ticket instead.                                   |
 
 ### 6. Update Journal
 
