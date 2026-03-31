@@ -183,25 +183,47 @@ The lifecycle has six phases. Each produces specific documents. User validation 
 **Goal**: Define what "done" looks like.
 
 1. Based on research findings (or the user's description), write `Spec.md`:
-   - **User stories**: Who wants what and why
+   - **User stories**: Who wants what and why. Assign a **priority** (P1, P2, P3…) to each story, where P1 is the most critical. Each story should be **independently testable** — include a one-line description of how it can be verified on its own.
    - **Acceptance criteria**: Concrete, testable conditions that prove the work is done
    - **Scope boundaries**: What's in scope and explicitly out of scope
 
-2. If the ticket has **cross-ticket dependencies**, create `Dependencies.md`:
+2. **Clarification scan.** Before finalising the spec, scan it for ambiguity across these categories:
+   - Functional scope & behaviour (goals, out-of-scope declarations, user roles)
+   - Domain & data model (entities, relationships, identity rules, state transitions)
+   - Interaction & UX flow (critical journeys, error/empty/loading states)
+   - Non-functional quality attributes (performance, scalability, reliability, observability, security)
+   - Integration & external dependencies (APIs, data formats, failure modes)
+   - Edge cases & failure handling (negative scenarios, rate limiting, conflicts)
+   - Constraints & trade-offs (technical limits, rejected alternatives)
+   - Terminology consistency (ambiguous or overloaded terms)
+
+   For each category that is **partial or missing**, decide whether clarification materially affects implementation. If it does, ask the user — limit yourself to the most impactful questions and ask them directly in conversation (no special format required). If a gap is better deferred to planning, note it internally and move on.
+
+3. If the ticket has **cross-ticket dependencies**, create `Dependencies.md`:
    - What this ticket is blocked by
    - What this ticket blocks
    - External dependencies
 
-3. If there are **unresolved questions** that block specification, create `Decisions.md`:
+4. If there are **unresolved questions** that block specification, create `Decisions.md`:
    - List each question with context in the **Open** section
    - Provide options with trade-offs for each
    - Include a suggested answer for each
    - **Ask the user to decide on ALL open questions before proceeding**
    - Move resolved questions to the **Resolved** section with the decision, date, and rationale
 
-4. Update ticket status to `specifying` (or `open-questions` if questions exist).
+5. **Self-validate the spec.** Before presenting to the user, check:
+   - No implementation details (frameworks, libraries, APIs) have leaked into the spec
+   - Every requirement is testable and unambiguous
+   - Acceptance criteria are measurable
+   - Scope is clearly bounded (both in-scope and out-of-scope stated)
+   - No more than 3 items remain marked `[NEEDS CLARIFICATION]` — resolve or ask the user about the rest
+   - All user stories have a priority (P1/P2/P3) and an independent-test description
 
-5. **Present Spec.md to the user for validation.**
+   If any check fails, fix the spec before presenting it.
+
+6. Update ticket status to `specifying` (or `open-questions` if questions exist).
+
+7. **Present Spec.md to the user for validation.**
 
 > **CHECKPOINT: Do not proceed to Phase 3 until the user has validated the spec.**
 
@@ -234,16 +256,37 @@ The lifecycle has six phases. Each produces specific documents. User validation 
 **Goal**: Break the plan into executable steps.
 
 1. Based on the confirmed plan, write `Tasks.md`:
-   - Concrete, actionable tasks as a checklist
-   - Each task should be small enough to complete and verify independently
-   - Order tasks by dependency (what must be done first)
-   - Include verification steps where appropriate (e.g., "run tests", "verify endpoint returns 200")
+   - Use this format for every task: `- [ ] T001 [P] Description with file path`
+     - **T001, T002, …**: Sequential task ID
+     - **[P]** (optional): Present only when the task can run in parallel with others (touches different files, no dependency on incomplete tasks)
+     - **Description**: Clear action including the exact file path to create or modify
+   - Group tasks by user-story priority (P1 first, then P2, etc.) so each group forms a self-contained, independently testable increment.
+   - Within each group, order by dependency: models → services → interfaces → integration.
+   - Include verification steps where appropriate (e.g., "run tests", "verify endpoint returns 200").
 
 2. Update ticket status to `planned` (if not already).
 
 3. **Present Tasks.md to the user for validation.**
 
 > **CHECKPOINT: Do not proceed to Phase 5 until the user has validated the tasks.**
+
+---
+
+### Phase 4b: Pre-Implementation Consistency Check
+
+**Goal**: Verify that Spec.md, Plan.md, and Tasks.md are consistent before writing code.
+
+Build a coverage map:
+
+1. List every requirement and acceptance criterion from Spec.md.
+2. List every task from Tasks.md.
+3. Verify that **every requirement maps to at least one task** and **every task traces back to a requirement or design decision in Plan.md**.
+4. Flag:
+   - **Uncovered requirements** — requirements with no corresponding task.
+   - **Orphan tasks** — tasks that don't map to any requirement (may indicate scope creep or a missing spec entry).
+   - **Terminology drift** — the same concept named differently across the three files.
+
+If gaps are found, update Tasks.md (or Spec.md if a requirement was missed) before proceeding. This check is lightweight — skip it for small tickets with ≤ 5 tasks.
 
 ---
 
