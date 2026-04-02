@@ -284,13 +284,17 @@ Based on findings, what do we recommend?
 
 ## User Stories
 
-### US-1: <Story title>
+### US-1: <Story title> (Priority: P1)
 
 **As a** <persona>, **I want** <action>, **so that** <benefit>.
 
-### US-2: <Story title>
+**Independent test**: <How this story can be verified on its own>
+
+### US-2: <Story title> (Priority: P2)
 
 **As a** <persona>, **I want** <action>, **so that** <benefit>.
+
+**Independent test**: <How this story can be verified on its own>
 
 ## Acceptance Criteria
 
@@ -336,9 +340,23 @@ Document important choices made during planning and their rationale.
 
 ## Task List
 
-- [ ] **Task 1**: <Description>
-- [ ] **Task 2**: <Description>
-- [ ] **Task 3**: <Description>
+Format: `- [ ] T001 [P] Description with file path`
+- **T001, T002, …** — sequential task ID
+- **[P]** — present only when the task can run in parallel with others
+- Include the exact file path to create or modify in the description
+
+Group tasks by user-story priority (P1 first). Each group should be an independently testable increment.
+
+### P1 — <Story title>
+
+- [ ] T001 <Description with file path>
+- [ ] T002 [P] <Description with file path>
+- [ ] T003 <Description with file path>
+
+### P2 — <Story title>
+
+- [ ] T004 <Description with file path>
+- [ ] T005 [P] <Description with file path>
 
 ## Completion Criteria
 
