@@ -406,6 +406,23 @@ def _build_multipart_body(
     return b"".join(chunks), boundary
 
 
+def _default_ssl_context() -> ssl.SSLContext:
+    """Build an SSL context that works reliably on macOS.
+
+    Python on macOS does not use the system Keychain by default, so
+    ``ssl.create_default_context()`` may fail to verify certificates.
+    When the ``certifi`` package is available, its CA bundle is used
+    automatically — the same strategy the ``requests`` library uses.
+    Verification is never skipped.
+    """
+    try:
+        import certifi  # type: ignore[import-untyped]
+
+        return ssl.create_default_context(cafile=certifi.where())
+    except ImportError:
+        return ssl.create_default_context()
+
+
 class AtlassianClient:
     """HTTP client for Jira or Confluence."""
 
@@ -447,7 +464,7 @@ class AtlassianClient:
             return ssl_context
         if self.config.ca_bundle:
             return ssl.create_default_context(cafile=self.config.ca_bundle)
-        return ssl.create_default_context()
+        return _default_ssl_context()
 
     def _build_headers(
         self, extra_headers: dict[str, str] | None = None

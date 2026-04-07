@@ -112,6 +112,6 @@ ancestor = 123456 AND type = page
 ## Example commands
 
 ```bash
-python scripts/jira_ops.py search --jql 'project = DEMO ORDER BY updated DESC' --limit 5
+acli jira workitem search --jql 'project = DEMO ORDER BY updated DESC' --limit 5
 python scripts/confluence_ops.py search --cql 'type = page AND space = ENG' --limit 5
 ```
