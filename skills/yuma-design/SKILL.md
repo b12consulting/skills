@@ -3,8 +3,8 @@ name: yuma-design
 description: Yuma brand design reference covering color palette, logos and typography guidance. Use this skill when creating or reviewing Yuma-branded visual assets to stay aligned with the design system.
 license: MIT
 metadata:
-	author: b12consulting
-	version: "1.0.0"
+  author: b12consulting
+  version: "1.0.0"
 ---
 
 # Yuma Color palette
