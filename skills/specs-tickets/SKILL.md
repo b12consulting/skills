@@ -1,6 +1,6 @@
 ---
 name: specs-tickets
-description: "Create new spec-driven tickets and resume existing ones through the full lifecycle: research, specification, planning, task definition, and implementation. Use when: the user describes new work to be done; continuing a previously started ticket; a feature, bug fix, or task needs planning and implementation; starting or resuming planned work on a project with specs/. Triggers on: 'new ticket', 'new feature', 'fix bug', 'implement', 'create ticket', 'I want to build', 'let us work on', 'new task', 'add feature', 'continue ticket', 'resume work', 'pick up where we left off', 'work on ticket', 'existing ticket', 'check ticket status', 'what is the state of ticket'."
+description: "Create new spec-driven tickets and resume existing ones through the full lifecycle: research, specification, planning, and implementation. Use when: the user describes new work to be done; continuing a previously started ticket; a feature, bug fix, or task needs planning and implementation; starting or resuming planned work on a project with specs/. Triggers on: 'new ticket', 'new feature', 'fix bug', 'implement', 'create ticket', 'I want to build', 'let us work on', 'add feature', 'continue ticket', 'resume work', 'pick up where we left off', 'work on ticket', 'existing ticket', 'check ticket status', 'what is the state of ticket'."
 ---
 
 # Specs Tickets
@@ -9,12 +9,13 @@ Create and execute tickets through the spec-driven lifecycle, or resume work on 
 
 ## Skill Dependencies
 
-This skill is part of a set of three skills designed to work together:
+This skill is part of a set of skills designed to work together:
 
-- **spec-driven** — Methodology reference (structure, formats, rules)
+- **spec-driven** — Core rules and high-level document map
 - **specs-setup** — Initialize `specs/` for a new project
 - **specs-tickets** (this skill) — Create and execute tickets through their lifecycle
 - **specs-review** — Audit specs health, consistency, and drift
+- **specs-finish-ticket** — Review implemented tickets before closure
 
 If any of these skills are missing from the project, **instruct the user to install them** before proceeding:
 
@@ -22,13 +23,13 @@ If any of these skills are missing from the project, **instruct the user to inst
 npx skills add b12consulting/skills --skill <missing_skill>
 ```
 
-**Always load the [spec-driven](../spec-driven/SKILL.md) skill first** for the full methodology reference. Load [templates](../spec-driven/references/templates.md) when creating documents.
+**Always load the [spec-driven](../spec-driven/SKILL.md) skill first** for the core rules. Load the [methodology reference](../spec-driven/references/methodology.md) for detailed lifecycle and Findings guidance. Load [templates](../spec-driven/references/templates.md) when creating documents.
 
 ## Prerequisites
 
-1. Verify `specs/` folder exists with `Vision.md`, `PRD.md`, `Goals.md`, and `Architecture/README.md`. If missing, prompt the user to run the [specs-setup](../specs-setup/SKILL.md) skill first.
-2. Read `specs/README.md`, then `specs/Vision.md`, `specs/PRD.md`, `specs/Goals.md`, and `specs/Architecture/README.md` to understand the project context.
-3. Check for coding standards (`.instructions.md`, `CLAUDE.md`, etc.). If missing, prompt the user to create them before implementation begins.
+1. Verify `specs/` folder exists with `Vision.md`, `PRD.md`, and `Architecture/README.md`. If missing, prompt the user to run the [specs-setup](../specs-setup/SKILL.md) skill first.
+2. Read `specs/README.md`, then `specs/Vision.md`, `specs/PRD.md`, and `specs/Architecture/README.md` to understand the project context.
+3. Read architecture sub-documents relevant to your ticket such as `specs/Architecture/data-model.md`.
 
 ---
 
@@ -36,9 +37,9 @@ npx skills add b12consulting/skills --skill <missing_skill>
 
 Determine whether the user wants to **create a new ticket** or **continue an existing one**.
 
-- If the user describes new work → go to [New Ticket](#new-ticket)
-- If the user references an existing ticket → go to [Resume Ticket](#resume-ticket)
-- If unclear, ask the user
+- If the user describes new work, go to the New Ticket section below.
+- If the user references an existing ticket, go to the Resume Ticket section below.
+- If unclear, ask the user.
 
 ---
 
@@ -47,13 +48,12 @@ Determine whether the user wants to **create a new ticket** or **continue an exi
 ### Phase 0: Create Ticket
 
 1. Ask the user to describe the work to be done.
-2. Ask for the **Jira issue key** (optional — store in frontmatter if provided).
-3. Determine the next ticket number: scan `specs/tickets/` for the highest existing number and increment by one. If no tickets exist, start at `001`.
-4. Derive a short slug from the description (lowercase, hyphen-separated).
-5. Create the ticket folder and `README.md`:
+2. Determine the next ticket number: scan `specs/tickets/` for the highest existing number and increment by one. If no tickets exist, start at `001`.
+3. Derive a short slug from the description using lowercase hyphen-separated words.
+4. Create the ticket folder and `Spec.md`:
 
-```
-specs/tickets/<NNN>-<slug>/README.md
+```text
+specs/tickets/<NNN>-<slug>/Spec.md
 ```
 
 Use this frontmatter:
@@ -63,16 +63,15 @@ Use this frontmatter:
 id: "<NNN>"
 title: "<Descriptive title>"
 status: research
-jira: "<JIRA-KEY>" # Omit if not provided
 owner: ""
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
 ---
 ```
 
-Follow with a one-paragraph summary of the ticket.
+Follow with a one-paragraph summary of the ticket and the initial spec scaffold.
 
-Then proceed to [Phase 1: Research](#phase-1-research).
+Then proceed to Phase 1: Research.
 
 ---
 
@@ -82,79 +81,71 @@ Then proceed to [Phase 1: Research](#phase-1-research).
 
 Ask the user which ticket to continue, or identify it from conversation context:
 
-- Ticket number (e.g., "ticket 003")
-- Jira key (e.g., "YAI-042") — scan ticket README frontmatter to find the match
-- Description (e.g., "the auth ticket") — scan ticket titles to find the best match
+- ticket number such as `003`
+- description such as `the auth ticket` by scanning ticket titles
 
 If ambiguous, list active tickets from `specs/README.md` and ask the user to pick one.
 
 ### 2. Read Ticket State
 
-Read the ticket's `README.md` and note the **status** from frontmatter. Then read **all existing documents** in the ticket folder to understand the full context.
+Read the ticket's `Spec.md` and note the **status** from frontmatter. Then read **all existing documents** in the ticket folder to understand the full context.
 
-Summarize the current state for the user: what phase the ticket is in, what's been completed, and what comes next.
+Summarize the current state for the user: what phase the ticket is in, what is complete, and what comes next.
 
 ### 3. Check for Drift
 
 Compare the ticket's documents against the current state of:
 
-- **`specs/Vision.md`** and **`specs/PRD.md`** — Have requirements changed since this ticket was written?
-- **`specs/Architecture/README.md`** — Has the architecture evolved?
-- **The codebase** — Has relevant code changed since the ticket was last worked on?
+- **`specs/Vision.md`** and **`specs/PRD.md`** — have requirements or success expectations changed since this ticket was written?
+- **`specs/Architecture/README.md`** — has the architecture evolved?
+- **the codebase** — has relevant code changed since the ticket was last worked on?
 
 If drift is detected:
 
-- Report the specific inconsistencies to the user
-- Discuss whether the ticket needs updating before continuing
-- If specs changed, the ticket may need its Spec.md or Plan.md updated
-- If code changed, completed tasks may need re-verification
+- report the specific inconsistencies to the user
+- discuss whether the ticket needs updating before continuing
+- if specs changed, the ticket may need `Spec.md` or `Plan.md` updates
+- if code changed, completed checklist items may need re-verification
 
 ### 4. Resolve Blockers
 
 If the ticket status is `open-questions`:
 
-- Present the unresolved questions from `Decisions.md` to the user
-- Ask for decisions on each
-- Record decisions in the Resolved section of Decisions.md
-- Update ticket status once all questions are answered
+- present the unresolved questions from `Decisions.md` to the user
+- ask for decisions on each
+- record decisions in the Resolved section of `Decisions.md`
+- update the ticket status once all questions are answered
 
-If the ticket has `Dependencies.md` with unresolved blockers:
+If the ticket's `Plan.md` already records unresolved blockers or sequencing constraints:
 
-- Report the blocking tickets and their current status
-- Discuss whether to wait, work around, or re-scope
+- report those blockers and their current status
+- discuss whether to wait, work around, or re-scope
 
 ### 5. Resume the Lifecycle
 
 Based on the current status, pick up at the appropriate phase:
 
-| Current Status   | Next Action                                                                                                                 |
-| ---------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| `research`       | Review Research.md findings. Proceed to [Phase 2: Specify](#phase-2-specify).                                               |
-| `specifying`     | Check if Spec.md has been validated. If yes, proceed to [Phase 3: Plan](#phase-3-plan). If no, present for validation.      |
-| `open-questions` | Resolve questions (step 4), then return to previous phase.                                                                  |
-| `planned`        | Check if Tasks.md exists. If yes, present for validation. If no, proceed to [Phase 4: Define Tasks](#phase-4-define-tasks). |
-| `in-progress`    | Check Tasks.md for uncompleted tasks. Continue from [Phase 5: Implement](#phase-5-implement).                               |
-| `done`           | Inform the user the ticket is complete. Ask if they want to reopen or create a follow-up.                                   |
-| `archived`       | Inform the user the ticket was archived. Ask if they want to create a new ticket instead.                                   |
+| Current Status   | Next Action                                                                                                     |
+| ---------------- | --------------------------------------------------------------------------------------------------------------- |
+| `research`       | Review `Research.md` findings. Proceed to Phase 2: Specify.                                                     |
+| `specifying`     | Check whether `Spec.md` has been validated. If yes, proceed to Phase 3: Plan. If no, present it for validation. |
+| `open-questions` | Resolve questions, then return to the prior phase.                                                              |
+| `planned`        | Review `Plan.md`, including its checklist, and proceed to implementation once it is confirmed.                  |
+| `in-progress`    | Continue from the execution checklist in `Plan.md`.                                                             |
+| `done`           | Inform the user the ticket is complete. Ask whether they want to reopen it or create a follow-up.               |
+| `archived`       | Inform the user the ticket was archived. Ask whether they want to create a new ticket instead.                  |
 
-### 6. Update Journal
+### 6. Update Findings
 
-Add a `Journal.md` entry (create the file if it doesn't exist) noting when work resumed, any drift discovered, and decisions made during this session.
+If resuming work uncovers durable assumptions, frictions, workarounds, follow-up candidates, or residual risks, create or update `Findings.md`. Keep it curated and durable rather than chronological.
 
 ---
 
 ## Ticket Lifecycle
 
-The lifecycle has six phases. Each produces specific documents. User validation is required at key checkpoints before proceeding.
+The lifecycle is: Research → Specify → Plan → Implement → Finish Review → Done.
 
-```
-┌──────────┐    ┌─────────┐    ┌──────┐    ┌─────────────┐    ┌───────────┐    ┌──────┐
-│ Research  │───▶│ Specify │───▶│ Plan │───▶│ Define Tasks│───▶│ Implement │───▶│ Done │
-└──────────┘    └─────────┘    └──────┘    └─────────────┘    └───────────┘    └──────┘
-                     ▲              ▲             ▲
-                  User           User          User
-                validates      confirms      validates
-```
+User validation is required at the spec, plan, and closeout checkpoints.
 
 **Any participant (human or agent) can execute any phase.** The lifecycle defines the order, not who does what.
 
@@ -166,42 +157,65 @@ The lifecycle has six phases. Each produces specific documents. User validation 
 
 1. Investigate the codebase, existing documentation, and any external resources relevant to the ticket.
 2. Identify technical constraints, existing patterns, and potential approaches.
-3. Document findings in `Research.md`:
-   - Objective: what we're trying to learn
+3. If the ticket may affect domain entities or boundary payloads, identify:
+   - the canonical domain concepts involved
+   - the canonical boundary contract involved
+   - the owner, producers, and consumers of that contract
+   - whether serialization or persistence format differs from the canonical in-memory shape
+4. Document findings in `Research.md`:
+   - Objective: what we are trying to learn
    - Findings: organized by topic
-   - Options considered with pros/cons
+   - Options considered with pros and cons
    - Recommendation
    - References
-4. Update ticket status to `research`.
+5. Update ticket status to `research` in `Spec.md`.
 
-**Research.md is optional for straightforward tickets.** If the path is clear from the user's description, skip directly to Phase 2. A one-line bug fix doesn't need research, but a new feature with multiple possible approaches does.
+**`Research.md` is optional for straightforward tickets.** If the path is clear from the user's description, skip directly to Phase 2. A one-line bug fix does not need research, but a new feature with multiple possible approaches often does.
 
 ---
 
 ### Phase 2: Specify
 
-**Goal**: Define what "done" looks like.
+**Goal**: Define what done looks like.
 
-1. Based on research findings (or the user's description), write `Spec.md`:
-   - **User stories**: Who wants what and why
-   - **Acceptance criteria**: Concrete, testable conditions that prove the work is done
-   - **Scope boundaries**: What's in scope and explicitly out of scope
+1. Based on research findings or the user's description, write `Spec.md`:
+   - **User stories**: who wants what and why. Assign a **priority** (`P1`, `P2`, `P3`, ...) to each story. Each story should be **independently testable** and include a one-line verification note.
+   - **Acceptance criteria**: concrete, testable conditions that prove the work is done
+   - **Scope boundaries**: what is in scope and explicitly out of scope
 
-2. If the ticket has **cross-ticket dependencies**, create `Dependencies.md`:
-   - What this ticket is blocked by
-   - What this ticket blocks
-   - External dependencies
+2. **Clarification scan.** Before finalizing the spec, scan it for ambiguity across these categories:
+   - functional scope and behavior
+   - domain and data model
+   - interaction and UX flow
+   - non-functional quality attributes
+   - integration and external dependencies
+   - edge cases and failure handling
+   - constraints and trade-offs
+   - terminology consistency
 
-3. If there are **unresolved questions** that block specification, create `Decisions.md`:
-   - List each question with context in the **Open** section
-   - Provide options with trade-offs for each
-   - Include a suggested answer for each
-   - **Ask the user to decide on ALL open questions before proceeding**
-   - Move resolved questions to the **Resolved** section with the decision, date, and rationale
+   For each category that is partial or missing, decide whether clarification materially affects implementation. If it does, ask the user. Limit yourself to the most impactful questions. If a gap is better deferred to planning, note it internally and move on.
 
-4. Update ticket status to `specifying` (or `open-questions` if questions exist).
+3. If there are unresolved questions that block specification, create `Decisions.md`:
+   - list each question with context in the Open section
+   - provide options with trade-offs for each
+   - include a suggested answer for each
+   - ask the user to decide on all open questions before proceeding
+   - move resolved questions to the Resolved section with the decision, date, and rationale
 
-5. **Present Spec.md to the user for validation.**
+4. **Self-validate the spec.** Before presenting it to the user, check:
+   - no implementation details have leaked into the spec
+   - every requirement is testable and unambiguous
+   - acceptance criteria are measurable
+   - scope is clearly bounded
+   - no more than 3 items remain marked `[NEEDS CLARIFICATION]`
+   - all user stories have a priority and an independent-test description
+   - field-level schema details appear in the spec only when they are part of a user-visible or product-level contract; stable technical contract definitions live in architecture docs or the plan
+
+   If any check fails, fix the spec before presenting it.
+
+5. Update ticket status to `specifying`, or `open-questions` if questions exist, in `Spec.md`.
+
+6. **Present `Spec.md` to the user for validation.**
 
 > **CHECKPOINT: Do not proceed to Phase 3 until the user has validated the spec.**
 
@@ -209,75 +223,78 @@ The lifecycle has six phases. Each produces specific documents. User validation 
 
 ### Phase 3: Plan
 
-**Goal**: Define the implementation strategy.
+**Goal**: Define the implementation strategy and executable checklist.
 
 1. Based on the confirmed spec, write `Plan.md`:
-   - **Approach**: High-level implementation strategy
-   - **Key design decisions**: Important choices and their rationale
-   - **Risks & mitigations**: What could go wrong and how to handle it
+   - **Approach**: high-level implementation strategy
+   - **Key design decisions**: important choices and their rationale
+   - **Dependencies and sequencing**: only the blockers or ordering constraints that materially affect execution
+   - **Data model and contract impact**: canonical entities, boundary contracts, serialization differences, and compatibility or cutover policy when relevant
+   - **Implementation checklist**: the concrete execution checklist with file-scoped items
+   - **Risks and mitigations**: what could go wrong and how to handle it
+   - **Verification**: the checks that prove the plan satisfies the spec
 
-2. **Check alignment with Architecture/README.md.** If the plan requires architectural changes:
-   - Flag this to the user explicitly
-   - Propose an ADR in `specs/decisions/`
-   - Update `specs/Architecture/README.md` only after user approval
+2. **Check alignment with architecture docs.** If the plan requires architectural changes:
+   - flag this to the user explicitly
+   - propose an ADR in `specs/decisions/`
+   - update `specs/Architecture/README.md` and any affected sub-documents only after user approval
 
-3. Update ticket status to `planned`.
+3. **Coverage check.** Before presenting the plan, verify that `Spec.md` and `Plan.md` are consistent:
+   - every requirement maps to at least one checklist item
+   - every checklist item traces back to a requirement or design decision
+   - terminology is consistent across the two files
 
-4. **Present Plan.md to the user for confirmation.**
+   For tickets that affect data modeling or boundary contracts, also verify:
+   - every changed canonical entity or contract is reflected in the relevant architecture doc
+   - every contract change has explicit verification checklist items for producer and consumer alignment
+   - compatibility or migration work is represented in `Plan.md` when needed
 
-> **CHECKPOINT: Do not proceed to Phase 4 until the user has confirmed the plan.**
+   If gaps are found, update `Plan.md` or `Spec.md` before proceeding. This check is lightweight — skip it for very small tickets with <= 5 checklist items.
 
----
+4. Update ticket status to `planned` in `Spec.md`.
 
-### Phase 4: Define Tasks
+5. **Present `Plan.md` to the user for confirmation.**
 
-**Goal**: Break the plan into executable steps.
-
-1. Based on the confirmed plan, write `Tasks.md`:
-   - Concrete, actionable tasks as a checklist
-   - Each task should be small enough to complete and verify independently
-   - Order tasks by dependency (what must be done first)
-   - Include verification steps where appropriate (e.g., "run tests", "verify endpoint returns 200")
-
-2. Update ticket status to `planned` (if not already).
-
-3. **Present Tasks.md to the user for validation.**
-
-> **CHECKPOINT: Do not proceed to Phase 5 until the user has validated the tasks.**
+> **CHECKPOINT: Do not proceed to implementation until the user has confirmed the plan.**
 
 ---
 
-### Phase 5: Implement
+### Phase 4: Implement
 
-**Goal**: Execute the tasks.
+**Goal**: Execute the plan.
 
-1. Work through `Tasks.md` sequentially:
-   - Check off each task as it is completed
-   - If a task reveals the spec or plan needs updating, **pause implementation**:
-     - Update the relevant document
-     - Log the change in `Journal.md`
-     - Inform the user of the change
-     - Get confirmation before continuing if the change is significant
+1. Work through the execution checklist in `Plan.md` sequentially:
+   - check off each item as it is completed
+   - if an item reveals the spec or plan needs updating, pause implementation
+   - update the relevant document, inform the user, and get confirmation if the change is significant
 
-2. **Drift detection during implementation**: If implementation reveals a conflict with Vision, PRD, Goals, or Architecture:
-   - **Alert the user immediately**
-   - Either create an ADR to update specs, or create a follow-up ticket to fix the code
-   - Do not silently deviate from specs
+2. Update `Findings.md` progressively:
+   - use it for durable discoveries that matter after the session ends
+   - create it as soon as those discoveries appear; do not wait until the ticket is nearly done
+   - every finding must end with a clear disposition such as `Addressed here`, `Follow-up needed`, or `Accepted for now`
 
-3. Update ticket status to `in-progress`.
+3. **Drift detection during implementation**: If implementation reveals a conflict with `Vision.md`, `PRD.md`, or architecture docs:
+   - alert the user immediately
+   - either create an ADR to update specs, or create a follow-up ticket to fix the code
+   - **do not silently deviate from specs**
+
+4. Update ticket status to `in-progress` in `Spec.md`.
 
 ---
 
-### Phase 6: Done
+### Phase 5: Prepare Finish Review
 
-1. Verify **all acceptance criteria** from Spec.md are met.
-2. Update ticket `README.md`:
-   - Set status to `done`
-   - Update the `updated` date
-3. Update `specs/README.md`:
-   - Move ticket from "Active Tickets" to "Recently Completed"
-4. Add an entry to `specs/Changelog.md` describing what was shipped.
-5. If any ground truth documents (Vision, PRD, Goals, Architecture) were updated during implementation, verify consistency across all references.
+**Goal**: Hand the ticket off for independent closeout review before it is marked done.
+
+1. Verify all acceptance criteria from `Spec.md` appear to be met.
+2. Make a final pass over `Plan.md` and `Findings.md`:
+   - ensure completed checklist items are checked off or clearly superseded
+   - ensure `Findings.md` captures durable assumptions, frictions, follow-up candidates, residual risks, and test gaps with clear dispositions
+3. If the ticket affects data shape, update `specs/Architecture/data-model.md` to classify the change explicitly:
+4. Do **not** mark the ticket `done` yet.
+5. Ask the user to start a **fresh conversation** and run the [specs-finish-ticket](../specs-finish-ticket/SKILL.md) skill for independent review.
+
+The ticket typically remains `in-progress` until the finish review passes and the user confirms closure.
 
 ---
 
@@ -286,15 +303,16 @@ The lifecycle has six phases. Each produces specific documents. User validation 
 Requirements often change during implementation. When they do:
 
 1. Update `Spec.md` with the new or changed requirements.
-2. Log the change and rationale in `Journal.md`.
-3. If the change affects Vision, PRD, Goals, or Architecture, create an ADR.
-4. If the change invalidates completed tasks, update `Tasks.md` accordingly.
-5. Re-validate with the user if the change is significant.
+2. Update `Plan.md` so the approach, sequencing, and checklist still reflect reality.
+3. Update `Findings.md` if the change revealed an assumption, workaround, follow-up candidate, or residual risk worth preserving.
+4. If the change affects `Vision.md`, `PRD.md`, or architecture docs, create an ADR.
+5. If the change alters canonical entities, boundary contracts, or serialization policy, update `specs/Architecture/data-model.md` and/or the relevant architecture docs when those definitions are part of the long-lived system design.
+6. Re-validate with the user if the change is significant.
 
-The spec is always the source of truth for the ticket, not the code. Keep them in sync.
+The spec is always the source of truth for the ticket, not the code. Keep it in sync.
 
 ## Scaling Guidance
 
-- **Small tickets** (bug fix, config change): Phase 0 → Phase 2 → Phase 4 → Phase 5 → Phase 6. Skip Research and Plan.
-- **Medium tickets** (feature, refactor): All phases. Research may be brief.
-- **Large tickets** (new system, major redesign): All phases. Consider breaking into multiple tickets during Phase 4 if the task list exceeds ~15 items.
+- **Small tickets** such as a bug fix or config change: create the ticket, specify it, write a compact plan with checklist, implement it, then send it to finish review. Skip Research.
+- **Medium tickets** such as a feature or refactor: use all phases. Research may be brief.
+- **Large tickets** such as a new system or major redesign: use all phases. Consider breaking the work into multiple tickets if the `Plan.md` checklist exceeds ~15 items.
