@@ -16,6 +16,10 @@ Install a specific skill:
 npx skills add b12consulting/skills --skill python-best-practices
 ```
 
+```bash
+npx skills add b12consulting/skills --skill pentesting-web-apps
+```
+
 Preview available skills before installing:
 
 ```bash
@@ -25,6 +29,18 @@ npx skills add b12consulting/skills --list
 ## Available Skills
 
 See the `skills/` directory for a full list of available skills, each with its own `SKILL.md` documentation.
+
+### pentesting-web-apps
+
+Web application pentesting playbook for URL-driven assessments. Covers crawling, authentication analysis, injection probes, and business-logic testing using free tools with an open-source-first preference.
+
+**Use when:**
+- Assessing the security of a web app you are explicitly authorized to test
+- Mapping routes, forms, APIs, and hidden endpoints from a single starting URL
+- Checking authentication and session handling weaknesses
+- Probing for common injection and IDOR-style authorization flaws
+
+Includes reusable helper scripts under `skills/pentesting-web-apps/scripts/` for composing crawl, auth, injection, and logic-testing workflows around the target URL.
 
 ## Skill Structure
 
