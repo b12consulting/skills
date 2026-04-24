@@ -37,7 +37,6 @@ Complete templates for every document in the spec-driven methodology.
 
 - [Vision](Vision.md)
 - [PRD](PRD.md)
-- [Goals](Goals.md)
 - [Architecture](Architecture/README.md)
 - [Glossary](Glossary.md)
 - [Changelog](Changelog.md)
@@ -67,6 +66,20 @@ Who are the primary users? Describe personas if applicable.
 | Persona | Description | Key Needs |
 |---------|-------------|-----------|
 | | | |
+
+## Success Metrics
+
+How do we measure success? Define quantitative and qualitative indicators.
+
+| Metric | Target | How Measured |
+|--------|--------|--------------|
+| | | |
+
+## Milestones
+
+| Milestone | Description | Target Date | Status |
+|-----------|-------------|-------------|--------|
+| | | | |
 ```
 
 ---
@@ -107,28 +120,6 @@ Who are the primary users? Describe personas if applicable.
 
 ---
 
-## specs/Goals.md
-
-```markdown
-# Goals
-
-## Success Metrics
-
-How do we measure success? Define quantitative and qualitative indicators.
-
-| Metric | Target | How Measured |
-|--------|--------|-------------|
-| | | |
-
-## Milestones
-
-| Milestone | Description | Target Date | Status |
-|-----------|-------------|-------------|--------|
-| | | | |
-```
-
----
-
 ## specs/Architecture/README.md
 
 ```markdown
@@ -163,6 +154,49 @@ Document important architectural constraints and the trade-offs made.
 Link to detailed architecture documents as they are created:
 
 _(none yet)_
+```
+
+---
+
+## specs/Architecture/data-model.md
+
+```markdown
+# Data Model
+
+## Purpose
+
+What part of the domain does this model describe, and why does it need its own document?
+
+## Canonical Entities
+
+| Entity | Purpose | Identity | Lifecycle / States |
+|--------|---------|----------|--------------------|
+| | | | |
+
+## Relationships
+
+| Source | Relationship | Target | Notes |
+|--------|--------------|--------|-------|
+| | | | |
+
+## Invariants
+
+- <Invariant 1>
+- <Invariant 2>
+
+## State Transitions
+
+| Entity | From | Event / Condition | To | Notes |
+|--------|------|-------------------|----|-------|
+| | | | | |
+
+## Derived / Read Models
+
+Describe any projections or read models derived from the canonical domain entities.
+
+## Related Boundary Docs
+
+Link to other architecture docs that expose these entities at system boundaries.
 ```
 
 ---
@@ -208,6 +242,10 @@ All notable changes to this project are documented here. Entries are in reverse 
 **Date**: YYYY-MM-DD
 **Ticket**: <link to related ticket, if any>
 
+## Affected Documents
+
+- Vision / PRD / Architecture files changed by this decision
+
 ## Context
 
 What situation or problem prompted this decision?
@@ -216,31 +254,13 @@ What situation or problem prompted this decision?
 
 What did we decide?
 
+## Compatibility / Migration
+
+What changes at the boundary? Is there a cutover, compatibility window, migration, or intentional break?
+
 ## Consequences
 
 What are the trade-offs? What becomes easier? What becomes harder?
-```
-
----
-
-## tickets/\<NNN\>-\<slug\>/README.md
-
-```yaml
----
-id: "<NNN>"
-title: "<Descriptive title>"
-status: research
-jira: ""
-owner: ""
-created: YYYY-MM-DD
-updated: YYYY-MM-DD
----
-```
-
-```markdown
-# <NNN> — <Title>
-
-<One-paragraph summary of what this ticket covers and why.>
 ```
 
 ---
@@ -280,7 +300,18 @@ Based on findings, what do we recommend?
 ## tickets/\<NNN\>-\<slug\>/Spec.md
 
 ```markdown
+---
+id: "<NNN>"
+title: "<Descriptive title>"
+status: research
+owner: ""
+created: YYYY-MM-DD
+updated: YYYY-MM-DD
+---
+
 # Spec: <Title>
+
+<One-paragraph summary of what this ticket covers and why.>
 
 ## User Stories
 
@@ -324,28 +355,25 @@ Describe the implementation strategy at a high level.
 
 Document important choices made during planning and their rationale.
 
-## Risks & Mitigations
+## Dependencies And Sequencing
 
-| Risk | Likelihood | Impact | Mitigation |
-|------|-----------|--------|-----------|
-| | | | |
-```
+Document only the blockers or ordering constraints that materially affect execution.
 
----
+## Data Model & Contract Impact
 
-## tickets/\<NNN\>-\<slug\>/Tasks.md
+- Canonical entities or value objects introduced or changed
+- Boundary contracts introduced or changed
+- Transport / persistence / serialization implications
+- Compatibility, migration, or cutover policy
 
-```markdown
-# Tasks: <Title>
-
-## Task List
+## Implementation Checklist
 
 Format: `- [ ] T001 [P] Description with file path`
-- **T001, T002, …** — sequential task ID
-- **[P]** — present only when the task can run in parallel with others
-- Include the exact file path to create or modify in the description
 
-Group tasks by user-story priority (P1 first). Each group should be an independently testable increment.
+- **T001, T002, ...** — sequential checklist item ID
+- **[P]** — present only when the work can run in parallel with other incomplete items
+- Include the exact file path to create or modify in the description
+- Group the checklist by user-story priority when that improves execution clarity
 
 ### P1 — <Story title>
 
@@ -358,33 +386,15 @@ Group tasks by user-story priority (P1 first). Each group should be an independe
 - [ ] T004 <Description with file path>
 - [ ] T005 [P] <Description with file path>
 
-## Completion Criteria
+## Risks & Mitigations
 
-All tasks checked off and acceptance criteria from Spec.md verified.
-```
-
----
-
-## tickets/\<NNN\>-\<slug\>/Dependencies.md
-
-```markdown
-# Dependencies: <Title>
-
-## Blocked By
-
-| Ticket | Title | Status | Impact |
-|--------|-------|--------|--------|
+| Risk | Likelihood | Impact | Mitigation |
+|------|-----------|--------|-----------|
 | | | | |
 
-## Blocks
+## Verification
 
-| Ticket | Title | Impact |
-|--------|-------|--------|
-| | | |
-
-## External Dependencies
-
-List any external systems, APIs, or third-party dependencies.
+List the tests or checks that prove the plan satisfies the spec.
 ```
 
 ---
@@ -421,14 +431,20 @@ Decisions that have been made. Kept as a record.
 
 ---
 
-## tickets/\<NNN\>-\<slug\>/Journal.md
+## tickets/\<NNN\>-\<slug\>/Findings.md
 
 ```markdown
-# Journal: <Title>
+# Findings: <Title>
 
-Chronological record of how this ticket evolved. Not a chat transcript — a curated summary of key decisions, pivots, and process.
+Curated implementation findings discovered while executing or reviewing this ticket. Update progressively while work is in flight and revisit before closing the ticket. Do not use this as a chronological log.
 
-## YYYY-MM-DD
+## Findings
 
-- <Event or decision>
+### F1: <Short title>
+
+**Category**: Assumption | Spec clarification | Friction | Workaround | Follow-up | Risk | Test gap
+**Finding**: <What was learned>
+**Impact**: <Why it matters>
+**Disposition**: Addressed here | Follow-up needed | Accepted for now
+**Follow-up**: <Ticket / action / none>
 ```
