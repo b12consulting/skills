@@ -11,6 +11,8 @@ When using an existing presentation as a template:
    ```
    Review `thumbnails.jpg` to see layouts, and markitdown output to see placeholder text.
 
+   > **For new Yuma presentations**, use `artifacts/Yuma Powerpoint template final.pptx` as your template — it contains the slide master with all brand styles built in. See [SKILL.md](SKILL.md#creating-yuma-presentations) for the layout reference and workflow.
+
 2. **Plan slide mapping**: For each content section, choose a template slide.
 
    ⚠️ **USE VARIED LAYOUTS** — monotonous presentations are a common failure mode. Don't default to basic title + bullet slides. Actively seek out:
