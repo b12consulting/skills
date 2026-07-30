@@ -1,3 +1,4 @@
+# DEPRECATED: MIGRATE TO https://github.com/weareyuma/yuma-ai-coding-assets instead
 # skills
 
 A collection of reusable AI agent skills for Yuma projects. Skills follow the [skills.sh](https://skills.sh/) open format and can be installed into any compatible AI coding agent (Claude, Cursor, Copilot, etc.).
